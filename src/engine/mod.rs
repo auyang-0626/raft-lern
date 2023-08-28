@@ -5,13 +5,14 @@ use tokio::sync::{mpsc, oneshot};
 use tokio::time;
 
 use crate::config::Config;
+use crate::engine::client::EngineClient;
 use crate::engine::event::Event;
-use crate::engine::event::send::EventSend;
 use crate::engine::state::EngineState;
 use crate::error::RaftResult;
 
 pub mod event;
 mod state;
+pub mod client;
 
 /// raft 引擎，接收事件，对外给出指令
 pub struct RaftEngine {
@@ -36,7 +37,7 @@ impl RaftEngine {
 }
 
 /// 启动raft引擎
-pub fn start_engine(cfg: Arc<Config>) -> RaftResult<Arc<EventSend>> {
+pub fn start_engine(cfg: Arc<Config>) -> RaftResult<Arc<EngineClient>> {
     let (api_sender, mut api_recv) = mpsc::channel(100000);
     let (notify_sender, mut notify_recv) = mpsc::channel(100000);
     let (shun_down_send, mut shun_down_signal) = oneshot::channel();
@@ -73,12 +74,12 @@ pub fn start_engine(cfg: Arc<Config>) -> RaftResult<Arc<EventSend>> {
 }
 
 /// 启动定时器
-pub(crate) fn tick_loop(send: Arc<EventSend>, duration: u64) {
+pub(crate) fn tick_loop(client: Arc<EngineClient>, duration: u64) {
     tokio::spawn(async move {
         let mut interval = time::interval(time::Duration::from_millis(duration));
         loop {
             interval.tick().await;
-            send.send_event(Event::Tick).await;
+            client.send_api_event(Event::Tick).await;
         }
     });
 }
