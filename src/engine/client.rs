@@ -1,23 +1,22 @@
 use std::sync::Arc;
 
-use log::{debug, info};
-use tokio::sync::mpsc::error::SendError;
+use log::{debug};
 use tokio::sync::mpsc::Sender;
 
-use crate::engine::event::Event;
+use crate::engine::{Message, Notice};
 use crate::error::RaftResult;
 
 /// 消息发送者
 pub struct EngineClient {
-    api_sender: Sender<Event>,
-    notify_sender: Sender<Event>,
-    shun_down_send: tokio::sync::oneshot::Sender<Event>,
+    api_sender: Sender<Message>,
+    notify_sender: Sender<Notice>,
+    shun_down_send: tokio::sync::oneshot::Sender<Notice>,
 }
 
 impl EngineClient {
-    pub fn new(api_sender: Sender<Event>,
-               notify_sender: Sender<Event>,
-               shun_down_send: tokio::sync::oneshot::Sender<Event>) -> Arc<EngineClient> {
+    pub fn new(api_sender: Sender<Message>,
+               notify_sender: Sender<Notice>,
+               shun_down_send: tokio::sync::oneshot::Sender<Notice>) -> Arc<EngineClient> {
         Arc::new(EngineClient {
             api_sender,
             notify_sender,
@@ -25,10 +24,17 @@ impl EngineClient {
         })
     }
 
-    pub async fn send_api_event(&self, e: Event) ->RaftResult<()>{
+    pub async fn send_api_event(&self, e: Message) ->RaftResult<()>{
         debug!("send_api_event {:?}",e);
         self.api_sender.send(e).await?;
         debug!("send_api_event success!");
+        Ok(())
+    }
+
+    pub async fn send_notice_event(&self, e: Notice) ->RaftResult<()>{
+        debug!("send_notice_event {:?}",e);
+        self.notify_sender.send(e).await?;
+        debug!("send_notice_event success!");
         Ok(())
     }
 }

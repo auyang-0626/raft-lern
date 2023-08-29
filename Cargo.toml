@@ -11,3 +11,5 @@ clap = {version="4.3.0",features=["derive"]}
 
 log = "0.4.6"
 log4rs = "1.1.1"
+chrono = "0.4.26"
+rand="0.8.5"
