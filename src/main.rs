@@ -1,5 +1,6 @@
 use std::sync::Arc;
 use std::time::Duration;
+use actix_web::HttpServer;
 use log4rs::append::console::ConsoleAppender;
 use log4rs::config::{Appender, Root};
 use log::{info, LevelFilter};
@@ -23,9 +24,14 @@ async fn main() {
     };
     info!("cfg:{:?}", cfg);
 
-    start_engine(Arc::new(cfg));
+    let engine_client = start_engine(Arc::new(cfg)).unwrap();
 
-    sleep(Duration::from_secs(100)).await;
+    HttpServer::new(|| {
+        App::new().service(greet)
+    })
+        .bind(("127.0.0.1", 8080))?
+        .run()
+        .await
 }
 
 
