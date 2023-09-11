@@ -1,8 +1,9 @@
 use std::sync::Arc;
-use log::info;
+use log::{debug, info};
 use crate::config::Config;
 use crate::engine::node::NodeRole;
-use crate::engine::{Message, Notice};
+use crate::engine::{ Notice};
+use crate::engine::message::Message;
 use crate::error::RaftResult;
 
 
@@ -18,7 +19,7 @@ impl RaftEngine {
     }
 
     pub async fn handle_notify(&mut self, notify: Notice) -> RaftResult<()> {
-        info!("handle_notify,接收到:{:?}", notify);
+        debug!("handle_notify,接收到:{:?}", notify);
         match notify { Notice::Tick => self.handle_tick() }
         Ok(())
     }

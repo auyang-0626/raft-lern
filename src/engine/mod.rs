@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use log::info;
+use serde::{Deserialize, Serialize};
 use tokio::sync::{mpsc, oneshot};
 
 use crate::config::Config;
@@ -15,12 +16,8 @@ pub mod client;
 mod tick;
 mod engine_impl;
 mod node;
+pub mod message;
 
-/// api请求
-#[derive(Debug,Clone)]
-pub enum Message{
-
-}
 
 /// 引擎运行期间的通知
 #[derive(Debug,Clone)]
@@ -31,7 +28,7 @@ pub enum Notice{
 
 
 /// 启动raft引擎
-pub fn start_engine(cfg: Arc<Config>) -> RaftResult<Arc<EngineClient>> {
+pub async  fn start_engine(cfg: Arc<Config>)  {
     let (api_sender, mut api_recv) = mpsc::channel(100000);
     let (notify_sender, mut notify_recv) = mpsc::channel(100000);
     let (shun_down_send, mut shun_down_signal) = oneshot::channel();
@@ -41,7 +38,7 @@ pub fn start_engine(cfg: Arc<Config>) -> RaftResult<Arc<EngineClient>> {
     // 定时器
     start_tick_loop(event_sender.clone(), cfg.heartbeat_interval / 2);
 
-    tokio::spawn(async move {
+
         let mut engine = RaftEngine::new(cfg);
         loop {
             tokio::select! {
@@ -63,9 +60,7 @@ pub fn start_engine(cfg: Arc<Config>) -> RaftResult<Arc<EngineClient>> {
             ;
         }
         info!("raft engine stopped!");
-    });
 
-    Ok(event_sender)
 }
 
 

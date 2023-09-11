@@ -3,7 +3,8 @@ use std::sync::Arc;
 use log::{debug};
 use tokio::sync::mpsc::Sender;
 
-use crate::engine::{Message, Notice};
+use crate::engine::{ Notice};
+use crate::engine::message::Message;
 use crate::error::RaftResult;
 
 /// 消息发送者

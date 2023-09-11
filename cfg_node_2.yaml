@@ -1,0 +1,13 @@
+cluster:
+  name: learn_raft_cluster
+
+heartbeat_interval: 2000
+election_timeout_min: 10000
+election_timeout_max: 20000
+
+curr_node_id: 2
+
+nodes:
+  - 1:127.0.0.1:10001
+  - 2:127.0.0.1:10002
+  - 3:127.0.0.1:10003

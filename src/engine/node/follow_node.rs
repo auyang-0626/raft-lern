@@ -4,7 +4,7 @@ use crate::config::Config;
 use crate::engine::node::Node;
 use crate::engine::state::term::Term;
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub(crate) struct FollowNode {
 
     pub(crate) cfg:Arc<Config>,

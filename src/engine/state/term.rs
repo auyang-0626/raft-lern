@@ -28,7 +28,7 @@ impl Term {
     /// 开始选举时，自增
     pub(crate) fn increment(&self, cfg: &Arc<Config>) -> Term {
         Term {
-            node_id: cfg.node_id,
+            node_id: cfg.curr_node_id,
             term_id: self.term_id + 1,
             last_heartbeat_time: 0,
             expire_time: get_current_time() + cfg.rand_election_timeout(),
