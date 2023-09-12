@@ -1,9 +1,8 @@
 use std::fmt::Formatter;
 use rand::Rng;
+use anyhow::{anyhow, Result};
 use serde::{Deserialize, Deserializer, Serialize};
 use serde::de::{Error, Unexpected, Visitor};
-
-use crate::error::{RaftError, RaftResult};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
@@ -60,9 +59,9 @@ impl<'de> Deserialize<'de> for NodeConfig {
 
 
 impl Config {
-    pub fn valid(&self) -> RaftResult<()> {
+    pub fn valid(&self) -> Result<()> {
         if self.curr_node_id <= 0 {
-            return Err(RaftError::boot_failed("未指定NodeId,或者指定的值非法！"));
+            return Err(anyhow!("未指定NodeId,或者指定的值非法！"));
         }
 
         Ok(())

@@ -1,18 +1,15 @@
 use std::env;
 use std::fs::File;
 use std::sync::Arc;
-use std::time::Duration;
 use actix_web::{App, get, HttpServer, post, Responder, web};
 use log4rs::append::console::ConsoleAppender;
 use log4rs::config::{Appender, Root};
 use log::{info, LevelFilter};
-use tokio::time::sleep;
 
 use crate::config::{Config, NodeConfig};
 use crate::engine::message::{Message, Receipt};
 use crate::engine::start_engine;
 
-mod error;
 mod engine;
 mod config;
 

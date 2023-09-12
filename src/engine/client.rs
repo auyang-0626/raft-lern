@@ -2,10 +2,10 @@ use std::sync::Arc;
 
 use log::{debug};
 use tokio::sync::mpsc::Sender;
+use anyhow::Result;
 
 use crate::engine::{ Notice};
 use crate::engine::message::Message;
-use crate::error::RaftResult;
 
 /// 消息发送者
 pub struct EngineClient {
@@ -25,14 +25,14 @@ impl EngineClient {
         })
     }
 
-    pub async fn send_api_event(&self, e: Message) ->RaftResult<()>{
+    pub async fn send_api_event(&self, e: Message) ->Result<()>{
         debug!("send_api_event {:?}",e);
         self.api_sender.send(e).await?;
         debug!("send_api_event success!");
         Ok(())
     }
 
-    pub async fn send_notice_event(&self, e: Notice) ->RaftResult<()>{
+    pub async fn send_notice_event(&self, e: Notice) ->Result<()>{
         debug!("send_notice_event {:?}",e);
         self.notify_sender.send(e).await?;
         debug!("send_notice_event success!");

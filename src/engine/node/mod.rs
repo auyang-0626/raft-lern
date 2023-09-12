@@ -6,6 +6,7 @@ use crate::engine::node::follow_node::FollowNode;
 pub mod follow_node;
 pub mod cluster;
 pub mod connected;
+pub mod candidate;
 
 pub(crate) trait Node {
     /// 接收到定时器消息

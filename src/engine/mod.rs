@@ -9,7 +9,6 @@ use crate::engine::client::EngineClient;
 use crate::engine::engine_impl::RaftEngine;
 use crate::engine::state::current_time::update_current_time;
 use crate::engine::tick::start_tick_loop;
-use crate::error::RaftResult;
 
 mod state;
 pub mod client;
